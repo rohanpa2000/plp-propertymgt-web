@@ -1,12 +1,6 @@
 import { combineReducers } from 'redux'
-import bookings from './users'
-import filterDate from './filterDate'
-import totalCost from './totalCost'
-import lastincidents from './lastincidents'
+import users from './users'
 
 export default combineReducers({
-    bookings,
-    filterDate,
-    totalCost,
-    lastincidents
+    users,
 })
