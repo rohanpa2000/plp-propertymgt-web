@@ -24,8 +24,6 @@ export class DatePicker extends PureComponent {
 
     constructor(props) {
 
-        //console.log("Date picker constructor called ");
-
         super(props);
 
         const { filterDate, lastincidents } = props;
@@ -63,17 +61,12 @@ export class DatePicker extends PureComponent {
         var intervalId = setInterval(this.timer, 30000);
         this.setState({ intervalId: intervalId });
         //console.log("component mounted");
-        const { reFetch, reFetchLastIcidents, lastincidents } = this.props;
-
-        reFetch(this.state.selectedDate);
-        reFetchLastIcidents(lastincidents);
-
     }
 
     componentWillUnmount = () => {
         // use intervalId from the state to clear the interval
         clearInterval(this.state.intervalId);
-        //console.log("component dismounted");
+        console.log("component mounted");
     }
 
     timer = () => {

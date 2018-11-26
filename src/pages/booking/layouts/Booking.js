@@ -10,7 +10,7 @@ import { createStore, applyMiddleware } from 'redux'
 //import { createLogger } from 'redux-logger'
 import rootReducer from '../reducers'
 
-import { fetchBookingsFromServer, fetchLastIncidentsFromServer } from '../actions'
+//import { fetchBookingsFromServer, fetchLastIncidentsFromServer } from '../actions'
 
 import Total from '../containers/TotalCost'
 import DateFilter from '../containers/DateFilter'
@@ -39,8 +39,10 @@ const store = createStore(
   applyMiddleware(thunkMiddleware)
 )
 
-store.dispatch(fetchBookingsFromServer(store.getState().filterDate));
-store.dispatch(fetchLastIncidentsFromServer());
+//console.log("getting booking from server " + store.getState().filterDate);
+
+//store.dispatch(fetchBookingsFromServer(store.getState().filterDate));
+//store.dispatch(fetchLastIncidentsFromServer());
 
 
 
