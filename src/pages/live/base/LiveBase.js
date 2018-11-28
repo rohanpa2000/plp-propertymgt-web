@@ -4,19 +4,17 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
+import LiveCon from '../containers/LiveCon'
+
 import { Provider } from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
 import { createStore, applyMiddleware } from 'redux'
-//import { createLogger } from 'redux-logger'
-import rootReducer from '../reducers'
+import LiveReducers from '../reducers'
 
-//import { fetchBookingsFromServer, fetchLastIncidentsFromServer } from '../actions'
-
-import Total from '../containers/TotalCost'
-import DateFilter from '../containers/DateFilter'
-import BookingList from '../containers/BookingList'
+import Clock from 'react-live-clock';
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
 
 const styles = theme => ({
   root: {
@@ -32,70 +30,74 @@ const styles = theme => ({
   },
 });
 
-//const loggerMiddleware = createLogger()
-
 const store = createStore(
-  rootReducer,
+  LiveReducers,
   applyMiddleware(thunkMiddleware)
 )
 
+//888888888888888888888888888888888888888888
 
-function getLocalBookingListCourt1() {
+function getLocalforCourt1() {
   return (
-    <BookingList
+    <LiveCon
       baseIncidentUrl='http://192.168.1.35/capture/'
       courtname='court1'
-      displayName='Court One [ 1 ]' />
+      displayName='Court One [ 1 ]'
+      triggerTime= {false} />
   );
 }
 
-function getWebBookingListCourt1() {
+function getWebforCourt1() {
   return (
-    <BookingList
+    <LiveCon
       baseIncidentUrl='http://jaela.dvrdns.org:3580/capture/'
       courtname='court1'
-      displayName='Court One [ 1 ]' />
+      displayName='Court One [ 1 ]' 
+      triggerTime= {false} />
   );
 }
 
-function getMobileBookingListCourt1() {
+function getMobileforCourt1() {
   return (
-    <BookingList
+    <LiveCon
       baseIncidentUrl='http://jaela.dvrdns.org:3580/capture/'
       courtname='court1'
-      displayName='[ 1 ]' />
+      displayName='[ 1 ]'
+      triggerTime= {false} />
   );
 }
 
 //888888888888888888888888888888888888888888
 
-function getLocalBookingListCourt2() {
+function getLocalforCourt2() {
   return (
-    <BookingList
+    <LiveCon
       baseIncidentUrl='http://192.168.1.36/capture/'
       courtname='court2'
-      displayName='Court One[ 2 ]' />
+      displayName='Court Two[ 2 ]' 
+      triggerTime= {true}/>
   );
 }
 
-function getWebBookingListCourt2() {
+function getWebforCourt2() {
   return (
-    <BookingList
+    <LiveCon
       baseIncidentUrl='http://jaela.dvrdns.org:3680/capture/'
       courtname='court2'
-      displayName='Court Two [ 2 ]' />
+      displayName='Court Two [ 2 ]'
+      triggerTime= {true} />
   );
 }
 
-function getMobileBookingListCourt2() {
+function getMobileforCourt2() {
   return (
-    <BookingList
+    <LiveCon
       baseIncidentUrl='http://jaela.dvrdns.org:3680/capture/'
       courtname='court2'
-      displayName='[ 2 ]' />
+      displayName='[ 2 ]'
+      triggerTime= {true} />
   );
 }
-
 
 function FullWidthGrid(props) {
   const { classes } = props;
@@ -104,36 +106,32 @@ function FullWidthGrid(props) {
     <Provider store={store}>
       <div style={{ padding: 0 }} className={classes.root}>
         <Grid container spacing={0}>
-          <Grid item xs={12} sm={6} >
-            <Paper elevation={0} square={true} className={classes.paper}><Total /></Paper>
-          </Grid>
           <Grid item xs={12} sm={6}>
-            <Paper elevation={0} square={true} className={classes.paper}><DateFilter /></Paper>
+            <Paper className={classes.paper}>
+              <Router>
+                <Switch>
+                  <Route exact path="/" component={() => getLocalforCourt1()} />
+                  <Route exact path="/web" component={() => getWebforCourt1()} />
+                  <Route path="/mobile" component={() => getMobileforCourt1()} />
+                </Switch>
+              </Router>
+            </Paper>
           </Grid>
           <Grid item xs={12} sm={6}>
             <Paper className={classes.paper}>
               <Router>
                 <Switch>
-                  <Route exact path="/" component={() => getLocalBookingListCourt1()} />
-                  <Route exact path="/web" component={() => getWebBookingListCourt1()} />
-                  <Route path="/mobile" component={() => getMobileBookingListCourt1()} />
+                  <Route exact path="/" component={() => getLocalforCourt2()} />
+                  <Route exact path="/web" component={() => getWebforCourt2()} />
+                  <Route path="/mobile" component={() => getMobileforCourt2()} />
                 </Switch>
-
               </Router>
-              </Paper>
+            </Paper>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={12}>
             <Paper className={classes.paper}>
-            <Router>
-            <Switch>
-                  <Route exact path="/" component={() => getLocalBookingListCourt2()} />
-                  <Route exact path="/web" component={() => getWebBookingListCourt2()} />
-                  <Route path="/mobile" component={() => getMobileBookingListCourt2()} />
-                </Switch>
-
-              </Router>
- 
-          </Paper>
+              This page is live when there is action at the loction. It is not a live stream.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Local time:  <Clock format={'hh:mm:ss A'} ticking={true} />
+            </Paper>
           </Grid>
         </Grid>
       </div>
@@ -146,4 +144,3 @@ FullWidthGrid.propTypes = {
 };
 
 export default withStyles(styles)(FullWidthGrid);
-//export default connect()(FullWidthGrid);

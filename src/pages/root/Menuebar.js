@@ -7,10 +7,19 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import Booking from '../booking/layouts/Booking';
 import User from '../user/layouts/User';
+import Live from '../live/base/LiveBase';
+
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import MailIcon from '@material-ui/icons/Mail';
+import Drawer from '@material-ui/core/Drawer';
+
 
 const styles = {
   root: {
@@ -23,12 +32,18 @@ const styles = {
     marginLeft: -12,
     marginRight: 20,
   },
+  list: {
+    width: 250,
+  },
+  fullList: {
+    width: 'auto',
+  },
 };
 
-class ButtonAppBar extends React.Component{
+class ButtonAppBar extends React.Component {
   state = {
     anchorEl: null,
-    page: "user"
+    page: "Live"
   };
 
   handleClick = event => {
@@ -39,60 +54,79 @@ class ButtonAppBar extends React.Component{
     this.setState({ anchorEl: null });
   };
 
-  handleBookingSelect = () => {
-    this.setState({ 
-      anchorEl: null,
-      page: "booking"
-     });
+  toggleDrawer = (open, page = 'Live') => () => {
+    this.setState({
+      open: open,
+      page: page
+    });
   };
 
-  handleUserSelect = () => {
-    this.setState({ 
-      anchorEl: null,
-      page: "user"
-     });
-  };
+  render() {
+    const { classes } = this.props;
+    const { page } = this.state;
 
-  render () {
-  const { classes } = this.props;
-  const { anchorEl, page } = this.state;
-  return (
-    <div className={classes.root}>
-      <div>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton aria-owns={anchorEl ? 'simple-menu' : undefined}
-                      aria-haspopup="true"
-                      onClick={this.handleClick}
-                      className={classes.menuButton} color="inherit" aria-label="Menu">
-            <MenuIcon />
-          </IconButton>
-          <Menu
-          id="simple-menu"
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={this.handleClose}
-        >
-          <MenuItem onClick={this.handleBookingSelect}>Bookings</MenuItem>
-          <MenuItem onClick={this.handleUserSelect}>Users</MenuItem>
-          <MenuItem onClick={this.handleClose}>Members</MenuItem>
-          <MenuItem onClick={this.handleClose}>Booking items</MenuItem>
-          <MenuItem onClick={this.handleClose}>Logout</MenuItem>
-        </Menu>
-          <Typography variant="title" color="inherit" className={classes.grow}>
-            PLP Badminton Courts
+    const sideList = (
+      <div className={classes.list}>
+        <List>
+          {['Live', 'Bookings'].map((text, index) => (
+            <ListItem button key={text}
+              onClick={this.toggleDrawer(false,text)}
+              onKeyDown={this.toggleDrawer(false,text)}
+            >
+              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+        <List>
+          {['Users', 'Members', 'Booking Item'].map((text, index) => (
+            <ListItem button key={text} 
+              onClick={this.toggleDrawer(false,text)}
+              onKeyDown={this.toggleDrawer(false,text)}
+            >
+              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+      </div>
+    );
+
+    return (
+      <div className={classes.root}>
+        <div>
+          <AppBar position="static">
+            <Toolbar>
+              <IconButton
+                onClick={this.toggleDrawer(true,this.state.page)}
+                className={classes.menuButton} color="inherit" aria-label="Menu">
+                <MenuIcon />
+              </IconButton>
+              <Drawer open={this.state.open} onClose={this.toggleDrawer(false, this.state.page)}>
+                <div
+                  tabIndex={0}
+                  role="button"
+                >
+                  {sideList}
+                </div>
+              </Drawer>
+
+              <Typography variant="title" color="inherit" className={classes.grow}>
+                PLP Badminton Courts
           </Typography>
-          <Button color="inherit">PLP Manager</Button>
-        </Toolbar>
-      </AppBar>
+              <Button color="inherit">PLP Manager</Button>
+            </Toolbar>
+          </AppBar>
+        </div>
+        <div>
+          {page === 'Bookings' ? (<Booking />) : ''}
+          {page === 'Users' ? (<User />) : ''}
+          {page === 'Live' ? (<Live />) : ''}
+        </div>
       </div>
-      <div>
-        {page === 'booking' ? (<Booking />) : ''}
-        {page === 'user' ? (<User />) : ''}
-      </div>
-    </div>
-  );
-}
+    );
+  }
 }
 
 ButtonAppBar.propTypes = {

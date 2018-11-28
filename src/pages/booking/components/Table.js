@@ -67,7 +67,7 @@ class EnhancedTable extends React.Component {
       selectedThumbId: 0,
       selectedThumbIndex: 0,
       page: 0,
-      rowsPerPage: 7,
+      rowsPerPage: 10,
     }
   }
 
