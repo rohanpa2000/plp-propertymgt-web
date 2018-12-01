@@ -10,13 +10,14 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import EnhancedTableHead from '../components/TableHead';
 import EnhancedTableToolbar from '../components/TableToolbar';
+import Name from '../components/Name';
+import NickName from '../components/NickName';
+import Phone from '../components/Phone';
+import Postal from '../components/Postal';
+import Email from '../components/Email';
+import DisplayName from '../components/DisplayName';
 
-import TimePicker from './TimePicker'
-import CustomerName from './CustomerName'
-import Cost from './Cost'
-import Completed from './Completed'
-import { CUSTOMER_NAME, COST, COMPLETED, START_TIME, END_TIME } from './Constants.js'
-
+import { NAME, NICK_NAME, DISPLAY_NAME, PHONE, EMAIL, POSTAL } from './Constants'
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -89,16 +90,7 @@ class EnhancedTable extends React.Component {
     }
     this.setState({ selected: [] });
   };
-
-  modifyThumbSelect = (rowId,index) => {
-
-    this.setState({       
-        selectedThumbId: rowId,
-        selectedThumbIndex: index,
-    });
-
-  }
-
+ 
   handleSelectClick = (event, id) => {
     const { selected } = this.state;
     const selectedIndex = selected.indexOf(id);
@@ -136,35 +128,25 @@ class EnhancedTable extends React.Component {
   }
 
   handleAddClick = () =>{
-    const { addRow, filterDate } = this.props;
-    addRow(filterDate);
+    const { addRow } = this.props;
+    addRow();
   }
-
-
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
     const { classes, tableTile } = this.props;
-    const { modifyRow, data, lastIncidentTime, isActive,baseIncidentUrl,lastIncidents } = this.props;
-
- 
-    
-    const { order, orderBy, selected, rowsPerPage, page, selectedThumbId, selectedThumbIndex } = this.state;
+    const { modifyRow, data } = this.props;
+   
+    const { order, orderBy, selected, rowsPerPage, page} = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-
-    //console.log(tableTile + " lastIncidentTime " + lastIncidentTime);
 
     return (
       <Paper className={classes.root}>
         <EnhancedTableToolbar
           tableTile = {tableTile}
-          lastIncidentTime = {lastIncidentTime} 
-          isActive = {isActive}
-          numSelected={selected.length}
-          baseIncidentUrl =  {baseIncidentUrl}
-          lastIncidents =  {lastIncidents}
           onDeleteClick={this.handleDeleteClick}
+          numSelected={selected.length}
           onAddClick = {this.handleAddClick} />
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
@@ -196,42 +178,40 @@ class EnhancedTable extends React.Component {
                           checked={isSelected} disabled = {n.isNoBooking? true: false} />
                       </TableCell>
                       <TableCell component="th" scope="row" padding="none">
-                        <TimePicker
-                          onDataChange={(value) => modifyRow(value, n.id, START_TIME)}
-                          time={n.startTime} isNoBooking={n.isNoBooking} />
+                        <Name
+                          onDataChange={(value) => modifyRow(value, n.id, NAME)}
+                          name={n.name} 
+                          rowId = {n.id} />
                       </TableCell>
                       <TableCell component="th" scope="row" padding="none">
-                        <TimePicker
-                          onDataChange={(value) => modifyRow(value, n.id, END_TIME)}
-                          time={n.endTime} isNoBooking={n.isNoBooking} />
+                        <NickName
+                          onDataChange={(value) => modifyRow(value, n.id, NICK_NAME)}
+                          name={n.nickName} 
+                          rowId = {n.id} />
                       </TableCell>
                       <TableCell component="th" scope="row" padding="none">
-                        <CustomerName
-                          onDataChange={(value) => modifyRow(value, n.id, CUSTOMER_NAME)}
-                          name={n.customer} isNoBooking={n.isNoBooking} 
-                          isPlayed = {n.isPlayed}
-                          rowId = {n.id}
-                          onThumbSelect = {(rowId,index) => this.modifyThumbSelect(rowId,index)}
-                          selectedThumbId = {selectedThumbId}
-                          selectedThumbIndex = {selectedThumbIndex}
-                          insidentImages = {n.imageLinks}
-                          actualStartTime = {n.actualStartTime}
-                          baseIncidentUrl =  {baseIncidentUrl}
-                          actualEndTime = {n.actualEndTime} />
+                        <DisplayName
+                          onDataChange={(value) => modifyRow(value, n.id, DISPLAY_NAME)}
+                          name={n.displayName} 
+                          rowId = {n.id} />
                       </TableCell>
                       <TableCell component="th" scope="row" padding="none">
-                        <Cost
-                          onDataChange={(value) => modifyRow(value, n.id, COST)}
-                          cost={n.cost} isNoBooking={n.isNoBooking} />
+                        <Phone
+                          onDataChange={(value) => modifyRow(value, n.id, PHONE)}
+                          name={n.phone} 
+                          rowId = {n.id} />
                       </TableCell>
                       <TableCell component="th" scope="row" padding="none">
-                        <Completed
-                          onDataChange={(value) => modifyRow(value, n.id, COMPLETED)}
-                          isCompleted={n.isCompleted} isNoBooking={n.isNoBooking}
-                          isPlayed = {n.isPlayed}
-                          actualStartTime = {n.actualStartTime}
-                          actualEndTime = {n.actualEndTime}
-                          />
+                        <Email
+                          onDataChange={(value) => modifyRow(value, n.id, EMAIL)}
+                          name={n.email} 
+                          rowId = {n.id} />
+                      </TableCell>
+                      <TableCell component="th" scope="row" padding="none">
+                        <Postal
+                          onDataChange={(value) => modifyRow(value, n.id, POSTAL)}
+                          name={n.postal} 
+                          rowId = {n.id} />
                       </TableCell>
                     </TableRow>
                   );

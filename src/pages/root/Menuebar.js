@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Booking from '../booking/layouts/Booking';
-import User from '../user/layouts/User';
+import Member from '../member/base/MemberBase';
 import Live from '../live/base/LiveBase';
 
 import List from '@material-ui/core/List';
@@ -43,7 +43,7 @@ const styles = {
 class ButtonAppBar extends React.Component {
   state = {
     anchorEl: null,
-    page: "Live"
+    page: "Members"
   };
 
   handleClick = event => {
@@ -121,7 +121,7 @@ class ButtonAppBar extends React.Component {
         </div>
         <div>
           {page === 'Bookings' ? (<Booking />) : ''}
-          {page === 'Users' ? (<User />) : ''}
+          {page === 'Members' ? (<Member />) : ''}
           {page === 'Live' ? (<Live />) : ''}
         </div>
       </div>

@@ -9,6 +9,10 @@ import thunkMiddleware from 'redux-thunk'
 import { createStore, applyMiddleware } from 'redux'
 import rootReducer from '../reducers'
 
+import MemberCon from '../containers/MemberCon'
+
+import {fetchMembersFromServer } from '../actions'
+
 
 const styles = theme => ({
   root: {
@@ -29,6 +33,10 @@ const store = createStore(
   applyMiddleware(thunkMiddleware)
 )
 
+const tenantId = 1;
+
+store.dispatch(fetchMembersFromServer(tenantId));
+
 function FullWidthGrid(props) {
   const { classes } = props;
 
@@ -37,8 +45,8 @@ function FullWidthGrid(props) {
       <div style={{ padding: 0 }} className={classes.root}>
         <Grid container spacing={0}>
           <Grid item xs={12} sm={12}>
-            <Paper className={classes.paper}>
-              Page 1
+            <Paper style={{ width: 1250 }}className={classes.paper}>
+                <MemberCon tenantId = {tenantId} />
             </Paper>
           </Grid>
         </Grid>
@@ -52,4 +60,3 @@ FullWidthGrid.propTypes = {
 };
 
 export default withStyles(styles)(FullWidthGrid);
-//export default connect()(FullWidthGrid);

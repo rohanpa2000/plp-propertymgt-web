@@ -8,13 +8,13 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Tooltip from '@material-ui/core/Tooltip';
 
 const rows = [
-    { id: 'startTime', numeric: false, disablePadding: true, label: 'Start Time' },
-    { id: 'endTime', numeric: false, disablePadding: true, label: 'End Time' },
-    { id: 'customer', numeric: false, disablePadding: true, label: 'Customer Name' },
-    { id: 'cost', numeric: false, disablePadding: true, label: 'Cost' },
-    { id: 'isCompleted', numeric: false, disablePadding: true, label: 'Paid ?' },
-  ];
-  
+    { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
+    { id: 'nickName', numeric: false, disablePadding: true, label: 'Nick Name' },
+    { id: 'displayName', numeric: false, disablePadding: true, label: 'Display Name' },
+    { id: 'phone', numeric: false, disablePadding: true, label: 'Phone' },
+    { id: 'email', numeric: false, disablePadding: true, label: 'Email' },
+    { id: 'postal', numeric: false, disablePadding: true, label: 'Postal' },
+  ];  
 
 class EnhancedTableHead extends React.Component {
     createSortHandler = property => event => {
