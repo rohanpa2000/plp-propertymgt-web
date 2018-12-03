@@ -20,7 +20,7 @@ const styles = theme => ({
   },
   paper: {
     padding: theme.spacing.unit * 2,
-    textAlign: 'center',
+    margin: 'auto',    
     color: theme.palette.text.secondary,
   },
   spacer: {
@@ -42,10 +42,10 @@ function FullWidthGrid(props) {
 
   return (
     <Provider store={store}>
-      <div style={{ padding: 0 }} className={classes.root}>
+      <div style={{ padding: 20 }} className={classes.root}>
         <Grid container spacing={0}>
           <Grid item xs={12} sm={12}>
-            <Paper style={{ width: 1250 }}className={classes.paper}>
+            <Paper style={{ width: 1450  }}className={classes.paper}>
                 <MemberCon tenantId = {tenantId} />
             </Paper>
           </Grid>

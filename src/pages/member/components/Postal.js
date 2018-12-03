@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Input from '@material-ui/core/TextField';
-import AccountCircle from '@material-ui/icons/AccountCircle';
+import AccountCircle from '@material-ui/icons/ContactMail';
 
 const styles = theme => ({
   input: {
@@ -55,7 +55,7 @@ class Name extends React.Component {
         <Input
           className={classes.input}
 
-          style={{ width: 220 }}
+          style={{ width: 400 }}
           value={stateName}
           onChange = {this.handleChange}
           onBlur={event => this.handleBlur(event)}

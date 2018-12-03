@@ -7,10 +7,15 @@ const getTenantid = (props) => {
   return tenantId;
 }
 
+const getMembers = (members) => {
+  return members.filter(member => 
+    member.isDeleted === false
+  )
+}
 
 const mapStateToProps = (state, props) => (
   {
-    data : state.members,
+    data : getMembers(state.members),
     tableTile : 'Members',
     tenantId : getTenantid(props)
   });

@@ -106,7 +106,7 @@ const members = (memberData = [], action) => {
       return deleteBookings;
     case MODIFY_MEMBER:
       const updatedBooking = modifyMember(memberData, action.value, action.id, action.column);
-      updateMemberToServer(updatedBooking, action.id);
+      updateMemberToServer(updatedBooking, action.id, action.dispatch, action.column);
       return updatedBooking;
     case GET_MEMBER:
       return fetchMembersFromServer(action.tenantid);
@@ -152,11 +152,11 @@ const addMemberToServer = async(members, dispatch, tenantid) => {
   }
 }
 
-const updateMemberToServer = (members, id) => {
+const updateMemberToServer = async(members, id, dispatch, columnName) => {
   const member = members.filter(item => item.id === id)
 
   if (member.length > 0) {
-    fetch(`http://jaela.dvrdns.org:9022/members/update`, {
+      await fetch(`http://jaela.dvrdns.org:9022/members/update`, {
       method: "POST",
       body: JSON.stringify(member[0]),
       headers: {
@@ -164,7 +164,10 @@ const updateMemberToServer = (members, id) => {
         'Content-Type': 'application/json'
       }
     })
-    .then(response => console.log(response))
+
+    if (columnName === NICK_NAME){
+      dispatch(fetchMembersFromServer(member[0].tenantid))
+    }
   }
 }
 
