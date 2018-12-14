@@ -1,5 +1,9 @@
 import Moment from 'moment';
 
+
+//export const serverUrl = 'http://localhost:9022'
+export const serverUrl = 'http://svc-dev-plp.webhop.org:9022'
+
 export const ADD_BOOKING = 'ADD_BOOKING';
 export const DELTE_BOOKING = 'DELETE_BOOKING';
 export const MODIFY_BOOKING = 'MODIFY_BOOKING';
@@ -15,11 +19,13 @@ export const RECEIVE_LAST_INCIDENTS = 'RECEIVE_LAST_INCIDENTS';
 export const REFETCH_LAST_INCIDENTS = 'REFETCH_LAST_INCIDENTS';
 
 
-export const addBooking = (props, dispatch, filterDate) => ({
+export const addBooking = (props, dispatch, filterDate, tenantId, itemId) => ({
     type: ADD_BOOKING,
     props: props,
     dispatch: dispatch,
-    filterDate: filterDate
+    filterDate: filterDate,
+    tenantId: tenantId,
+    itemId: itemId
 })
 
 
@@ -57,10 +63,11 @@ export const receiveBookings = (bookings) => ({
     receivedAt: Date.now(),
 })
 
-export const reFetchDateChange = (filterDate, dispatch) => ({
+export const reFetchDateChange = (filterDate, dispatch, tenantId) => ({
     type: RE_FETCH_DATE_CHANGE,
     filterDate: filterDate,
-    dispatch: dispatch
+    dispatch: dispatch,
+    tenantId: tenantId
 })
 
 export const calculateTotalCost = (bookings) => ({
@@ -69,12 +76,12 @@ export const calculateTotalCost = (bookings) => ({
 })
 
 
-export const fetchBookingsFromServer = (filterDate) => {
+export const fetchBookingsFromServer = (filterDate, tenantId) => {
     return dispatch => {
         //console.log('test');
         const dateFilter = Moment(filterDate).format("YYYYMMDD")
         dispatch(requestBookings)
-        return fetch(`http://jaela.dvrdns.org:9022/bookings/getbookings/` + dateFilter)
+        return fetch(serverUrl + `/bookings/getbookings/` + dateFilter + '/' + tenantId)
             .then(response => response.json())
             .then(json => dispatch(receiveBookings(json)))
     }
@@ -83,7 +90,7 @@ export const fetchBookingsFromServer = (filterDate) => {
 
 export const fetchLastIncidentsFromServer = () => {
     return dispatch => {
-        return fetch(`http://jaela.dvrdns.org:9022/bookings/getlastincidents`)
+        return fetch(serverUrl + `/bookings/getlastincidents`)
             .then(response => response.json())
             .then(json => dispatch(receiveLastIncidents(json)))
     }

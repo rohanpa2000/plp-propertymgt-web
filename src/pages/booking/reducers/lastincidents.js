@@ -14,7 +14,7 @@ const lastincidents = (lastIncidentsData = [], action) => {
     case REFETCH_LAST_INCIDENTS:
         //console.log ('refetching')
         action.dispatch(fetchLastIncidentsFromServer());
-        console.log('action.lastIncidents ' + action.lastIncidents.legth);
+        //console.log('action.lastIncidents ' + action.lastIncidents.legth);
         return action.lastIncidents;
       default:
         return lastIncidentsData;

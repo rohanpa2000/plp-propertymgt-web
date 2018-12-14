@@ -1,4 +1,4 @@
-import { ADD_BOOKING, DELTE_BOOKING, MODIFY_BOOKING, FETCH_BOOKINGS, RECEIVE_BOOKINGS, fetchBookingsFromServer } from '../actions'
+import { ADD_BOOKING, DELTE_BOOKING, MODIFY_BOOKING, FETCH_BOOKINGS, RECEIVE_BOOKINGS, fetchBookingsFromServer, serverUrl } from '../actions'
 import { CUSTOMER_NAME, COST, COMPLETED, START_TIME, END_TIME } from '../components/Constants'
 
 import Moment from 'moment';
@@ -10,20 +10,22 @@ function createDataFromDB(id, courtName, bookingDate, startTime, endTime, custom
   actualStartTime,
   actualEndTime,
   isPlayed,
-  isDeleted, isNew, isNoBooking = false, imageLinks = '') {
+  isDeleted, isNew, isNoBooking = false, imageLinks = '', tenantId, itemId, memberId) {
 
     const min = 1;
     const max = 1000;
     const key = min + Math.random() * (max - min);
 
+    //console.log('itemId ' + itemId);
+
   return { id, courtName, bookingDate, startTime, endTime, customer, cost, isCompleted,  
           actualStartTime,
           actualEndTime,
           isPlayed,
-          isDeleted, isNew, isNoBooking,imageLinks, key };
+          isDeleted, isNew, isNoBooking,imageLinks, key , tenantId, itemId, memberId};
 }
 
-const addBooking = (bookingData, props, filterDate) => {
+const addBooking = (bookingData, props, filterDate, tenantId, itemId) => {
   const { courtname } = props;
 
   filterDate.setHours(23);
@@ -32,7 +34,11 @@ const addBooking = (bookingData, props, filterDate) => {
   const nowTime = Moment(filterDate).format("YYYYMMDDHHmmss");
 
   counter = counter - 1;
-  const newItem = createDataFromDB(counter, courtname, nowTime , nowTime, nowTime, 'නොදන්නා - தெரியாத', 0, false,'','',false, false, true,false);
+  const newItem = createDataFromDB(counter, courtname, 
+    nowTime , nowTime, nowTime, '', 0, false,'','',
+    false, false, true,false,'',tenantId, itemId, -2);
+
+    console.log('newItem ' + tenantId);
 
   const updatedData = [
     ...bookingData,
@@ -101,7 +107,8 @@ const receiveBookings = bookings => {
       booking.actualStartTime,
       booking.actualEndTime,
       booking.isPlayed,
-      false,false,booking.isNoBooking, booking.imageLinks))
+      false,false,booking.isNoBooking, booking.imageLinks,
+      booking.tenantId, booking.itemId, booking.memberId ))
 
   return newData;
 }
@@ -109,8 +116,8 @@ const receiveBookings = bookings => {
 const bookings = (bookingData = [], action) => {
   switch (action.type) {
     case ADD_BOOKING:
-      const addedBookings = addBooking(bookingData, action.props, action.filterDate);
-      addBookingToServer(addedBookings, action.dispatch, action.filterDate);
+      const addedBookings = addBooking(bookingData, action.props, action.filterDate, action.tenantId, action.itemId);
+      addBookingToServer(addedBookings, action.dispatch, action.filterDate, action.tenantId);
       return addedBookings;
     case DELTE_BOOKING:
       const deleteBookings = deleteBooking(bookingData, action.selected);
@@ -134,7 +141,7 @@ const deleteBookingToServer = (bookings) => {
   const booking = bookings.filter(item => item.isDeleted === true)
 
   if (booking.length > 0) {
-    fetch(`http://jaela.dvrdns.org:9022/bookings/delete`, {
+    fetch( serverUrl + `/bookings/delete`, {
       method: "POST",
       body: JSON.stringify(booking),
       headers: {
@@ -148,11 +155,11 @@ const deleteBookingToServer = (bookings) => {
 
 
 
-const addBookingToServer = async(bookings, dispatch, filterDate) => {
+const addBookingToServer = async(bookings, dispatch, filterDate,tenantId) => {
   const booking = bookings.filter(item => item.isNew === true)
 
   if (booking.length > 0) {
-      await fetch(`http://jaela.dvrdns.org:9022/bookings/add`, {
+      await fetch(serverUrl + `/bookings/add`, {
       method: "POST",
       body: JSON.stringify(booking),
       headers: {
@@ -160,7 +167,7 @@ const addBookingToServer = async(bookings, dispatch, filterDate) => {
         'Content-Type': 'application/json'
       }
     });
-    dispatch(fetchBookingsFromServer(filterDate))
+    dispatch(fetchBookingsFromServer(filterDate, tenantId))
   }
 }
 
@@ -169,7 +176,7 @@ const updateBookingsToServer = (bookings, id) => {
   const booking = bookings.filter(item => item.id === id)
 
   if (booking.length > 0) {
-    fetch(`http://jaela.dvrdns.org:9022/bookings/update`, {
+    fetch(serverUrl + `/bookings/update`, {
       method: "POST",
       body: JSON.stringify(booking[0]),
       headers: {

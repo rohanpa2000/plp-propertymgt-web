@@ -39,66 +39,61 @@ const store = createStore(
   applyMiddleware(thunkMiddleware)
 )
 
+const tenantId = 1;
 
-function getLocalBookingListCourt1() {
-  return (
-    <BookingList
-      baseIncidentUrl='http://192.168.1.35/capture/'
-      courtname='court1'
-      displayName='Court One [ 1 ]' />
-  );
+function createItem(id,tenantid,instanceName,displayName,localUrl,webUrl,mobileUrl, displayNameShort) {
+
+  const min = 1;
+  const max = 1000;
+  const key = min + Math.random() * (max - min);
+
+return { key, id,tenantid,instanceName,displayName,localUrl,webUrl,mobileUrl, displayNameShort};
 }
 
-function getWebBookingListCourt1() {
-  return (
-    <BookingList
-      baseIncidentUrl='http://jaela.dvrdns.org:3580/capture/'
-      courtname='court1'
-      displayName='Court One [ 1 ]' />
-  );
-}
+const addItem = (itemData, id,tenantid,instanceName,displayName,localUrl,webUrl,mobileUrl, displayNameShort) => {
+  //const { tenantid } = props;
 
-function getMobileBookingListCourt1() {
-  return (
-    <BookingList
-      baseIncidentUrl='http://jaela.dvrdns.org:3580/capture/'
-      courtname='court1'
-      displayName='[ 1 ]' />
-  );
-}
+  const newItem = createItem(id,tenantid,instanceName,displayName,localUrl,webUrl,mobileUrl, displayNameShort);
 
-//888888888888888888888888888888888888888888
+  const updatedData = [
+    ...itemData,
+    newItem
+  ];
 
-function getLocalBookingListCourt2() {
-  return (
-    <BookingList
-      baseIncidentUrl='http://192.168.1.36/capture/'
-      courtname='court2'
-      displayName='Court One[ 2 ]' />
-  );
-}
-
-function getWebBookingListCourt2() {
-  return (
-    <BookingList
-      baseIncidentUrl='http://jaela.dvrdns.org:3680/capture/'
-      courtname='court2'
-      displayName='Court Two [ 2 ]' />
-  );
-}
-
-function getMobileBookingListCourt2() {
-  return (
-    <BookingList
-      baseIncidentUrl='http://jaela.dvrdns.org:3680/capture/'
-      courtname='court2'
-      displayName='[ 2 ]' />
-  );
-}
-
+  return updatedData;
+};
 
 function FullWidthGrid(props) {
   const { classes } = props;
+
+  let itemData = [];
+
+itemData = addItem( itemData, 3,1,
+                      'court1', 
+                      'Court One [1]',
+                      'http://192.168.1.35/capture/',
+                      'http://jaela.dvrdns.org:3580/capture/',
+                      'http://jaela.dvrdns.org:3580/capture/', 
+                      '[1]');
+                      
+itemData = addItem( itemData, 4,1,
+                        'court2', 
+                        'Court Two [2]',
+                        'http://192.168.1.36/capture/',
+                        'http://jaela.dvrdns.org:3680/capture/',
+                        'http://jaela.dvrdns.org:3680/capture/', 
+                        '[2]');
+
+function getBookingList(tenantId, baseIncidentUrl, item) {
+  return (
+    <BookingList
+      itemId = {item.id}
+      tenantId = {tenantId}
+      baseIncidentUrl = {baseIncidentUrl}
+      courtname = {item.instanceName}
+      displayName = {item.displayName} />
+  );
+}
 
   return (
     <Provider store={store}>
@@ -108,33 +103,22 @@ function FullWidthGrid(props) {
             <Paper elevation={0} square={true} className={classes.paper}><Total /></Paper>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Paper elevation={0} square={true} className={classes.paper}><DateFilter /></Paper>
+            <Paper elevation={0} square={true} className={classes.paper}><DateFilter tenantId = {tenantId}/></Paper>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          
+          {itemData.map(item => (
+            <Grid item xs={12} sm={6} key = {item.key}>
             <Paper className={classes.paper}>
               <Router>
                 <Switch>
-                  <Route exact path="/" component={() => getLocalBookingListCourt1()} />
-                  <Route exact path="/web" component={() => getWebBookingListCourt1()} />
-                  <Route path="/mobile" component={() => getMobileBookingListCourt1()} />
+                  <Route exact path="/" component={() => getBookingList(tenantId, item.localUrl, item)} />
+                  <Route exact path="/web" component={() => getBookingList(tenantId, item.webUrl, item)} />
+                  <Route exact path="/mobile" component={() => getBookingList(tenantId, item.mobileUrl, item)} />
                 </Switch>
-
               </Router>
               </Paper>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Paper className={classes.paper}>
-            <Router>
-            <Switch>
-                  <Route exact path="/" component={() => getLocalBookingListCourt2()} />
-                  <Route exact path="/web" component={() => getWebBookingListCourt2()} />
-                  <Route path="/mobile" component={() => getMobileBookingListCourt2()} />
-                </Switch>
-
-              </Router>
- 
-          </Paper>
-          </Grid>
+          ))}
         </Grid>
       </div>
     </Provider>

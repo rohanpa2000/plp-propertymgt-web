@@ -147,13 +147,9 @@ class EnhancedTable extends React.Component {
   render() {
     const { classes, tableTile } = this.props;
     const { modifyRow, data, lastIncidentTime, isActive,baseIncidentUrl,lastIncidents } = this.props;
-
- 
     
     const { order, orderBy, selected, rowsPerPage, page, selectedThumbId, selectedThumbIndex } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-
-    //console.log(tableTile + " lastIncidentTime " + lastIncidentTime);
 
     return (
       <Paper className={classes.root}>

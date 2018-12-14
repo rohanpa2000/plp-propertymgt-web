@@ -6,7 +6,7 @@ const filterDate = (filterDate = new Date(), action) => {
             return new Date();
 
         case RE_FETCH_DATE_CHANGE:
-            action.dispatch(fetchBookingsFromServer(action.filterDate));
+            action.dispatch(fetchBookingsFromServer(action.filterDate,action.tenantId));
             return action.filterDate
             
         default:

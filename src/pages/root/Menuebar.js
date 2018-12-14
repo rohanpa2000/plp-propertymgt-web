@@ -43,7 +43,7 @@ const styles = {
 class ButtonAppBar extends React.Component {
   state = {
     anchorEl: null,
-    page: "Members"
+    page: "Bookings"
   };
 
   handleClick = event => {

@@ -10,8 +10,8 @@ const mapStateToProps = (state) => (
     lastincidents: state.lastincidents
   });
 
-const mapDispatchToProps = (dispatch) => ({
-  reFetch: (filterDate) => dispatch(reFetchDateChange(filterDate, dispatch)),
+const mapDispatchToProps = (dispatch, props) => ({
+  reFetch: (filterDate) => dispatch(reFetchDateChange(filterDate, dispatch, props.tenantId)),
   reFetchLastIcidents: (lastIncidents) => dispatch(reFetchLastIcidents(lastIncidents,dispatch)),
 });
 

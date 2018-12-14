@@ -73,8 +73,11 @@ const isActive = (lastIncidents, props) => {
 
 
 const getBookings = (bookings, props) => {
+
+  //console.log('props.itemId ' + props.itemId);
+
   return bookings.filter(booking => 
-    booking.courtName === getCourtName(props) &&
+    booking.itemId === props.itemId &&
     booking.isDeleted === false
   )
 }
@@ -93,7 +96,7 @@ const mapStateToProps = (state, props) => (
   });
 
 const mapDispatchToProps = (dispatch,props) => ({
-  addRow: (filterDate) => dispatch(addBooking(props, dispatch,filterDate)),
+  addRow: (filterDate) => dispatch(addBooking(props, dispatch,filterDate,props.tenantId, props.itemId)),
   deleteRow: (selected) => dispatch(deleteBooking(selected)),
   modifyRow: (value, id, column) => dispatch(modifyBooking(value, id, column, dispatch))
 });
